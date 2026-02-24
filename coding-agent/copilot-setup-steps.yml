@@ -1,0 +1,52 @@
+name: "Copilot Setup Steps"
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+jobs:
+  copilot-setup-steps:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Copilot CLI
+        run: npm install -g @github/copilot
+      - name: Install .NET Framework SDK and targeting packs
+        shell: pwsh
+        run: |
+          $vsInstaller = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe"
+          $installPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath
+          & $vsInstaller modify --installPath $installPath `
+            --add Microsoft.Net.Component.4.7.1.TargetingPack `
+            --add Microsoft.Net.Component.4.7.2.TargetingPack `
+            --add Microsoft.Net.Component.4.8.SDK `
+            --add Microsoft.Net.Component.4.8.TargetingPack `
+            --add Microsoft.Net.Component.4.8.1.SDK `
+            --add Microsoft.Net.Component.4.8.1.TargetingPack `
+            --quiet --norestart --wait
+      - name: Verify .NET Framework 4.8 support
+        shell: pwsh
+        run: |
+          $refAssemblies = "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8"
+          $msbuild = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe | Select-Object -First 1
+          if (-not (Test-Path $refAssemblies)) {
+            Write-Error ".NET Framework 4.8 reference assemblies not found at $refAssemblies"
+            exit 1
+          }
+          if (-not $msbuild -or -not (Test-Path $msbuild)) {
+            Write-Error "MSBuild not found"
+            exit 1
+          }
+          Write-Host ".NET Framework 4.8 reference assemblies: OK"
+          Write-Host "MSBuild: $msbuild"
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
