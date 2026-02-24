@@ -18,6 +18,10 @@ jobs:
           node-version: '20'
       - name: Install Copilot CLI
         run: npm install -g @github/copilot
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
       - name: Install .NET Framework SDK and targeting packs
         shell: pwsh
         run: |
@@ -46,7 +50,3 @@ jobs:
           }
           Write-Host ".NET Framework 4.8 reference assemblies: OK"
           Write-Host "MSBuild: $msbuild"
-      - name: Setup .NET 10 SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
