@@ -7,7 +7,7 @@ AI-powered assistance for upgrading and modernizing .NET applications. This plug
 Add the marketplace, then install the plugin:
 
 ```
-/plugin marketplace add dotnet/upgrade-assistant
+/plugin marketplace add dotnet/modernize-dotnet
 /plugin install modernize-dotnet@modernize-dotnet-plugins
 ```
 
