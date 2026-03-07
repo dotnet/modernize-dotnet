@@ -27,7 +27,7 @@ The agent guides you through a structured workflow:
 
 ## MCP Server
 
-The plugin includes an MCP server (AppModernization) that provides upgrade and analysis tools. It starts automatically when the modernize-dotnet agent is invoked — no manual configuration needed.
+The plugin includes an MCP server (Modernization) that provides upgrade and analysis tools. It starts automatically when the modernize-dotnet agent is invoked — no manual configuration needed.
 
 ## Plugin Structure
 
