@@ -1,0 +1,17 @@
+name: Repository Issue
+description: Report a bug or suggest an improvement to the content in this repository.
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > **Note:** This repository is for issues related to the content and samples in this repo only.
+        > For Visual Studio-related questions, bugs, or feature requests, please use the
+        > [Visual Studio Developer Community](https://developercommunity.visualstudio.com/).
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the issue or suggestion.
+    validations:
+      required: true
