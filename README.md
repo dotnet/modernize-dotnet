@@ -18,8 +18,9 @@ Choose the development environment you use and follow the setup instructions.
 #### Install
 
 1. Install the [GitHub Copilot modernization](https://marketplace.visualstudio.com/items?itemName=vscjava.migrate-java-to-azure) extension from the VS Code Marketplace
-2. Open a project in VS Code
-3. Open Copilot Chat and run: @modernize-dotnet
+2. Open a workspace containing your .NET project
+3. Open Copilot Chat and select modernize-dotnet from the Agent picker
+4. Prompt the agent with the type of upgrade you would like to perform, for example: upgrade my project to .NET 10.
 
 </details>
 
@@ -47,7 +48,15 @@ The modernize-dotnet plugin adds a modernization agent to Copilot CLI.
    /plugin install modernize-dotnet@modernize-dotnet-plugins
    ```
 
-3. **Use the agent** — see the [plugin README](plugins/modernize-dotnet/README.md) for usage details.
+3. **Select the agent:**
+
+   ```/agent ``` to select  ```modernize-dotnet ```
+   
+4. Prompt the agent:
+
+   ```
+   upgrade my project to .NET 10
+   ```
 
 > **Note:** You may need to restart Copilot CLI after installing the plugin before the agent becomes available ([tracking issue](https://github.com/github/copilot-cli/issues/1646)).
 
@@ -84,10 +93,3 @@ See the [coding-agent README](coding-agent/README.md) for setup instructions.
 
 </details>
 
-### Repository Structure
-
-```
-├── .github/plugin/marketplace.json   # Plugin marketplace definition
-├── plugins/modernize-dotnet/         # Copilot CLI plugin
-└── coding-agent/                     # Copilot Coding Agent setup
-```
