@@ -2,6 +2,12 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.956-preview1
+
+Changed
+- Updated VS Code Extension name to match new branding - "GitHub Copilot modernization for .NET"
+- Aligned the VS Code Extension version with the versions of the modernize-dotnet plugin and Microsoft.GitHubCopilot.Modernization.Mcp nuget package
+
 ## Baseline 1.0.948-preview1 (CLI/CCA) and 0.1.721-prerelease (VS Code)
 
 ### Existing Skills
