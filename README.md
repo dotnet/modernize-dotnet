@@ -1,6 +1,6 @@
-# .NET Modernization Tools
+# .NET Modernization Agent
 
-AI-powered tools for upgrading and modernizing .NET applications across multiple development environments.
+AI-powered agent for upgrading and modernizing .NET applications across multiple development environments.
 
 ### Getting Started
 
@@ -92,4 +92,5 @@ See the [coding-agent README](coding-agent/README.md) for setup instructions.
 3. Alternatively, open GitHub Copilot Chat and run: @Modernize
 
 </details>
+
 
