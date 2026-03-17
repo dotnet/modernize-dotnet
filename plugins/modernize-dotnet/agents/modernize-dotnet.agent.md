@@ -8,8 +8,12 @@ mcp-servers:
     args: [
       'Microsoft.GitHubCopilot.Modernization.Mcp',
       '--prerelease',
-      '--yes'
+      '--yes',
+      '--add-source',
+      'https://api.nuget.org/v3/index.json',
+      '--ignore-failed-sources'
     ]
+    cwd: '~'
     tools: ['*']
     env:
       APPMOD_CALLER_TYPE: copilot-cli
