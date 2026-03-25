@@ -2,9 +2,16 @@
 
 AI-powered agent for upgrading and modernizing .NET applications across multiple development environments.
 
-### Getting Started
+Use the modernize-dotnet agent to analyze your application, generate an upgrade plan, and apply changes to move to the latest .NET.
 
-Choose the development environment you use and follow the setup instructions.
+## Supported Scenarios
+
+- Upgrade projects to the latest supported .NET version  
+- Migrate from .NET Framework to modern .NET  
+
+## Getting Started
+
+Select your development environment and follow the setup steps.
 
 <details>
 <summary>Visual Studio Code</summary>
