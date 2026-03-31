@@ -2,9 +2,26 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1017-preview1
+
+### Added
+- Add Aspire support scenario for migrating to .NET Aspire
+- Added skill for migrating C# code to use nullable references
+- Added skill for modernizing C# code
+- Added support and skills for incremental updateswhen modernizing old MVC/WebApi and related patterns
+
+### Changed
+- Improved several Entity Framework, WCF and target framework migration skills
+- Updated ModelContextProtocol SDK from 0.4.0-preview.1 to 1.1.0
+- Use MCP sampling for sidechannel LLM requests when available
+
+### Fixed
+- Fix a case where a code-fenced LLM response was improperly parsed
+- Improve welcome options and reduce unnecessary followups after confirmation popups
+
 ## 1.0.956-preview1
 
-Changed
+### Changed
 - Updated VS Code Extension name to match new branding - "GitHub Copilot modernization for .NET"
 - Aligned the VS Code Extension version with the versions of the modernize-dotnet plugin and Microsoft.GitHubCopilot.Modernization.Mcp nuget package
 
