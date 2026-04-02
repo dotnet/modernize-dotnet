@@ -14,5 +14,3 @@ jobs:
       - uses: dotnet/modernize-dotnet-actions@main
         with:
           dotnet-version: '10.0.x'
-          #set 'true' to install .NET Framework SDK and targeting packs (4.7.1 – 4.8.1) on Windows runners, required for .NET Framework or desktop workloads
-          install-framework-targeting-packs: 'false'
