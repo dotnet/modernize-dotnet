@@ -8,6 +8,8 @@ jobs:
   copilot-setup-steps:
     # set runs-on to 'windows-latest' or 'ubuntu-latest' based on your needs
     runs-on: windows-latest
+    permissions:
+      contents: read
     steps:
       - uses: dotnet/modernize-dotnet-actions@main
         with:
