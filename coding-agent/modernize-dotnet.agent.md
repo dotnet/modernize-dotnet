@@ -14,7 +14,7 @@ mcp-servers:
     cwd: '~'
     tools: ['*']
     env:
-      APPMOD_CALLER_TYPE: copilot-cli
+      APPMOD_CALLER_TYPE: copilot-coding-agent
 ---
 
 
