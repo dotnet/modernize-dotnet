@@ -1,6 +1,6 @@
 {
   "name": "modernize-dotnet",
-  "version": "1.0.1017-preview1",
+  "version": "1.0.1026-preview1",
   "description": "AI-powered .NET modernization and upgrade assistant. Helps upgrade .NET Framework and .NET applications to the latest versions of .NET.",
   "author": {
     "name": "Microsoft"

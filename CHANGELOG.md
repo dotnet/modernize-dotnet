@@ -2,6 +2,15 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1026-preview1
+
+### Added
+- Added new Apire Integration scenario for adding Aspire support to existing applications for inner-loop and Azure deployment
+- Added new Aspire Version Upgrade scenario for upgrading Aspire applications to newer versions
+
+### Changed
+- Updated EF6 Code First migration, MVC configuration, Aspire integration, and .NET version upgrade skills
+
 ## 1.0.1017-preview1
 
 ### Added
