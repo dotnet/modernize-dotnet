@@ -2,6 +2,16 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1037-preview1
+
+### Added
+- Added OpenTelemetry tracing support for MCP server and Copilot CLI
+
+### Changed
+- Removed deprecated o1 and o3 LLM model options
+- Improved repository root detection during state initialization
+- Improved context detection for Copilot Coding Agent
+
 ## 1.0.1026-preview1
 
 ### Added

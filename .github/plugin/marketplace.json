@@ -2,7 +2,7 @@
   "name": "modernize-dotnet-plugins",
   "metadata": {
     "description": ".NET Upgrade Assistant plugins for GitHub Copilot",
-    "version": "1.0.1026-preview1"
+    "version": "1.0.1037-preview1"
   },
   "owner": {
     "name": "Microsoft"
@@ -12,7 +12,7 @@
       "name": "modernize-dotnet",
       "source": "./plugins/modernize-dotnet",
       "description": "AI-powered .NET modernization and upgrade assistant. Helps upgrade .NET Framework and .NET applications to the latest versions of .NET.",
-      "version": "1.0.1026-preview1"
+      "version": "1.0.1037-preview1"
     }
   ]
 }
