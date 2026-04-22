@@ -2,6 +2,17 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1047-preview1
+
+### Added
+- Added analysis rules for detecting binding redirects issues during upgrade assessment
+
+### Changed
+- Improved working directory detection during the assessment phase
+
+### Fixed
+- Fixed MCP server issue with stdout that could interrupt stdio transport
+
 ## 1.0.1037-preview1
 
 ### Added
