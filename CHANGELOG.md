@@ -2,6 +2,17 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1063-preview1
+
+### Added
+- User can now specify a folder or a list of projects to run the upgrade process
+
+### Changed
+- Relaxed branch selection instructions to allow users to choose staying on current branch
+
+### Security
+- Bumped Microsoft.Build.Tasks.Core from 16.10.0-preview to 16.11.6
+
 ## 1.0.1047-preview1
 
 ### Added

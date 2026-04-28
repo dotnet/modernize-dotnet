@@ -112,6 +112,7 @@ When no active scenario exists and the user wants to start an upgrade/migration:
 4. **Run pre-initialization** (following the scenario-initialization skill + the scenario's Pre-Initialization section):
    - Gather ALL parameters: source control defaults (if git repo) + scenario-specific defaults (per the scenario skill's Pre-Initialization section) + flow mode
    - Present everything to the user in a **single consolidated prompt** — no wizard-style multi-step Q&A
+   - **Use `ask_user`** (if available) to collect the user's confirmation — follow the scenario-initialization skill's Interactive Question Tool guidance for how to structure the options
    - Wait for user confirmation (**Automatic mode**: skip this pause if the user's initial request already provided all required parameters — see Flow Mode section)
    - If git repo: handle source control (commit/stash/undo pending changes, create/switch to working branch)
    - Call `initialize_scenario` — if git repo, now on the correct branch
@@ -360,6 +361,12 @@ Workflow files at: `{RepoRoot}/.github/upgrades/{scenarioId}/`
 | `tasks/{taskId}/progress-details.md` | Per-task change record |
 | `execution-log.md` | Chronological progress log |
 
+## Asking User Questions
+
+When you need to ask the user a question or confirm a choice — at pause points, during scenario initialization, before high-risk changes, or any time you present options — use the `ask_user` tool if it is available in your environment. This renders as an interactive UI element with clickable choices rather than plain text.
+
+If no such tool is available in your environment (e.g., when running on GitHub), present the question as formatted text with clear option labels and instructions (e.g., "Reply `confirm` to proceed").
+
 ## Communication Style
 
 - Be concise and action-oriented
@@ -416,7 +423,7 @@ When your environment supports spawning sub-agents (e.g., via `runSubagent` or s
 
 ### Orchestrator-Only Decisions (never delegate)
 
-- Calling `start_task`, `complete_task`, `break_down_task`, `get_state`, `initialize_scenario`
+- Calling `start_task`, `complete_task`, `break_down_task`, `get_state`, `initialize_scenario`, `resume_scenario`
 - Deciding whether to decompose, skip, or reorder tasks
 - Creating task folders or task.md files (only `start_task` / `break_down_task` do this)
 
