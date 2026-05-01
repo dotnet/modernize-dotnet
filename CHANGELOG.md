@@ -2,9 +2,64 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1063-preview1
+
+### Added
+- User can now specify a folder or a list of projects to run the upgrade process
+
+### Changed
+- Relaxed branch selection instructions to allow users to choose staying on current branch
+
+## 1.0.1047-preview1
+
+### Added
+- Added analysis rules for detecting binding redirects issues during upgrade assessment
+
+### Changed
+- Improved working directory detection during the assessment phase
+
+### Fixed
+- Fixed MCP server issue with stdout that could interrupt stdio transport
+
+## 1.0.1037-preview1
+
+### Added
+- Added OpenTelemetry tracing support for MCP server and Copilot CLI
+
+### Changed
+- Removed deprecated o1 and o3 LLM model options
+- Improved repository root detection during state initialization
+- Improved context detection for Copilot Coding Agent
+
+## 1.0.1026-preview1
+
+### Added
+- Added new Apire Integration scenario for adding Aspire support to existing applications for inner-loop and Azure deployment
+- Added new Aspire Version Upgrade scenario for upgrading Aspire applications to newer versions
+
+### Changed
+- Updated EF6 Code First migration, MVC configuration, Aspire integration, and .NET version upgrade skills
+
+## 1.0.1017-preview1
+
+### Added
+- Add Aspire support scenario for migrating to .NET Aspire
+- Added skill for migrating C# code to use nullable references
+- Added skill for modernizing C# code
+- Added support and skills for incremental updateswhen modernizing old MVC/WebApi and related patterns
+
+### Changed
+- Improved several Entity Framework, WCF and target framework migration skills
+- Updated ModelContextProtocol SDK from 0.4.0-preview.1 to 1.1.0
+- Use MCP sampling for sidechannel LLM requests when available
+
+### Fixed
+- Fix a case where a code-fenced LLM response was improperly parsed
+- Improve welcome options and reduce unnecessary followups after confirmation popups
+
 ## 1.0.956-preview1
 
-Changed
+### Changed
 - Updated VS Code Extension name to match new branding - "GitHub Copilot modernization for .NET"
 - Aligned the VS Code Extension version with the versions of the modernize-dotnet plugin and Microsoft.GitHubCopilot.Modernization.Mcp nuget package
 

@@ -6,19 +6,11 @@ on:
       - .github/workflows/copilot-setup-steps.yml
 jobs:
   copilot-setup-steps:
+    # set runs-on to 'windows-latest' or 'ubuntu-latest' based on your needs
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install Copilot CLI
-        run: npm install -g @github/copilot
-      - name: Setup .NET 10 SDK
-        uses: actions/setup-dotnet@v4
+      - uses: dotnet/modernize-dotnet-actions@main
         with:
           dotnet-version: '10.0.x'
