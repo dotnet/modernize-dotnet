@@ -14,3 +14,13 @@ jobs:
       - uses: dotnet/modernize-dotnet-actions@main
         with:
           dotnet-version: '10.0.x'
+
+      - uses: actions/checkout@v4
+        with:
+          repository: dotnet/modernize-dotnet
+          path: _modernize-dotnet
+          sparse-checkout: |
+            README.md
+
+      - run: cp _modernize-dotnet/README.md ./
+        shell: bash
