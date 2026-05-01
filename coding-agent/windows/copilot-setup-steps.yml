@@ -16,3 +16,13 @@ jobs:
           dotnet-version: '10.0.x'
           #set 'true' to install .NET Framework SDK and targeting packs (4.7.1 – 4.8.1) on Windows runners, required for .NET Framework or desktop workloads
           install-framework-targeting-packs: 'true'
+
+      - run: |
+          New-Item -ItemType Directory -Force -Path .github\agents | Out-Null
+          @"
+          ---
+          name: modernize-dotnet
+          ---
+          You are a test agent. When invoked, respond only with "Hello World!" and nothing else.
+          "@ | Set-Content -Path .github\agents\modernize-dotnet.agent.md
+        shell: pwsh
