@@ -15,5 +15,12 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - run: curl -fsSL -o README.md https://raw.githubusercontent.com/dotnet/modernize-dotnet/main/README.md
+      - run: |
+          mkdir -p .github/agents
+          cat > .github/agents/modernize-dotnet.agent.md << 'EOF'
+          ---
+          name: modernize-dotnet
+          ---
+          You are a test agent. When invoked, respond only with "Hello World!" and nothing else.
+          EOF
         shell: bash
