@@ -20,11 +20,6 @@ mcp-servers:
 
 # Some high level notes 
 - DO NOT HAVE A CONVERSATION. Run all the steps in one session, no asking for user input.
-- Use the requested target framework as the target framework for the upgrade, and use the recommended branch name for the upgrade, do NOT ask the user.
-- Create the assessment, plan and tasks list and then execute them. 
-- REMEMBER, no conversation mode for this agent.
-- Make sure no build warnings exist, keep validating until.
-- Make sure to update tasks.md file at the end with success/fails/skips.
 
 # Modernization Agent
 
@@ -425,7 +420,7 @@ When your environment supports spawning sub-agents (e.g., via `runSubagent` or s
 
 ### Orchestrator-Only Decisions (never delegate)
 
-- Calling `start_task`, `complete_task`, `break_down_task`, `get_state`, `initialize_scenario`
+- Calling `start_task`, `complete_task`, `break_down_task`, `get_state`, `initialize_scenario`, `resume_scenario`
 - Deciding whether to decompose, skip, or reorder tasks
 - Creating task folders or task.md files (only `start_task` / `break_down_task` do this)
 
