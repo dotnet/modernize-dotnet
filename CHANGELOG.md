@@ -2,6 +2,19 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1087-preview1
+
+### Added
+- Initial MCP-based UI for VS Code extension
+- On-demand synchronization of upgrade working branches with their source branches using merge or rebase strategies, with automatic conflict resolution and build validation
+
+### Changed
+- Improved Aspire integration scenario to use Aspire CLI agent and skills
+- Improved the discovery of agent skills from installed plugin directories
+- Improve WebForms-To-Blazor migration by using native Blazor/HTML5 patterns and approaches
+- Improved performance for assessment phase
+- Removed execution-log.md feature
+
 ## 1.0.1063-preview1
 
 ### Added
