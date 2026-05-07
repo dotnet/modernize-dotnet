@@ -43,7 +43,7 @@ Never start upgrade/migration/modernization *work* based on your own knowledge o
 - `initialize_scenario`: Initialize a new scenario workflow (creates `.github/upgrades/{scenarioId}/` folder structure)
 - `resume_scenario`: Resume an existing scenario from a previous session (loads it into the current session without creating a new one)
 - `start_task`: Start a task — returns task content, related skills, stale task warnings
-- `complete_task`: Mark a task as complete (or failed with `failed=true`)
+- `complete_task`: Mark a task as complete — `complete_task(taskId, filesModified)`. To fail/abandon: `complete_task(taskId, filesModified, failed=true)`. Pass `filesModified` in both cases (use an empty list if no files were changed).
 - `break_down_task`: Register subtasks for a parent task. Declarative: provide the complete desired subtask list — non-completed subtasks not in the list are removed, completed subtasks are preserved, matching IDs keep their state.
 
 ### Scenario & Instructions
@@ -100,7 +100,7 @@ Each warning contains:
 - `TaskId`, `Description`: What the task is
 - `Instruction`: Action to take — **follow this instruction**
 
-Handle stale warnings before starting new work: assess the task's state, check its folder for evidence of completed work, then call `complete_task(taskId)` to finalize or `complete_task(taskId, failed=true)` to abandon.
+Handle stale warnings before starting new work: assess the task's state, check its folder for evidence of completed work, then call `complete_task(taskId, filesModified)` to finalize or `complete_task(taskId, [], failed=true)` to abandon.
 
 ## Starting New Work
 
@@ -112,7 +112,7 @@ When no active scenario exists and the user wants to start an upgrade/migration:
 4. **Run pre-initialization** (following the scenario-initialization skill + the scenario's Pre-Initialization section):
    - Gather ALL parameters via tool calls (source control detection + scenario-specific tools) — NO user interaction yet
    - **If `confirm_options` is in your tool list** (MCP Apps supported): call it — do NOT present options as text. The tool handles the interactive UI.
-     - ⛔ **BLOCKING**: Do NOT write any response or proceed until `confirm_options` returns `{ confirmed, values }`. "Automatic mode" means no pauses DURING execution — it does NOT mean skipping the pre-start confirmation.
+     - ⛔ **BLOCKING**: Do NOT write any response or proceed until `confirm_options` returns `{ confirmed, values }`. In Automatic mode, you may skip this call only if the user's initial request already provided ALL required parameters (scenario-specific + source control is auto-detectable); if ANY parameter is uncertain or missing, you must still call `confirm_options` — even in Automatic mode.
      - If `confirmed: false` → stop, ask how to proceed. If `confirmed: true` → use the returned `values`.
    - **If `confirm_options` is NOT in your tool list**: present the options and defaults as structured text and ask the user to confirm or override before proceeding.
    - If git repo: handle source control (commit/stash/undo pending changes, create/switch to working branch)
@@ -138,6 +138,8 @@ Load the `task-execution` skill before starting any task work: `get_instructions
 ```
 For each task:
   1. start_task(taskId) — returns task content + related skills
+     ⛔ **MANDATORY** (if `show_scenario_links` is in your tool list — NEVER skip, no exceptions):
+     Immediately after start_task returns: `show_scenario_links(path='<repoRoot>', title='<task description>', eventLabel='Task started', eventStatus='started', taskId='<taskId>', taskProgress='<N> of <total>')`
   2. ⛔ BEFORE ANY OTHER WORK — consider and load relevant skills:
      a. Read every <skill> description in <task_related_skills> from the response.
      b. For each skill: will you be doing work this skill covers? If yes, read `{path}/skill.md` NOW.
@@ -165,8 +167,7 @@ For each task:
   8. Write tasks/{taskId}/progress-details.md — what actually changed
   9. complete_task(taskId, filesModified)
   10. ⛔ **MANDATORY** (if `show_scenario_links` is in your tool list — NEVER skip, no exceptions):
-      - After start_task: `show_scenario_links(path='<repoRoot>', title='<task description>', eventLabel='Task started', eventStatus='started', taskId='<taskId>', taskProgress='<N> of <total>')`
-      - After complete_task: `show_scenario_links(path='<repoRoot>', title='<task description>', eventLabel='Task completed', eventStatus='completed', taskId='<taskId>', taskProgress='<N> of <total>')`
+      After complete_task: `show_scenario_links(path='<repoRoot>', title='<task description>', eventLabel='Task completed', eventStatus='completed', taskId='<taskId>', taskProgress='<N> of <total>')`
   11. Pick next task based on flow mode:
      - **Automatic**: If `availableTasks` has a next task → `start_task(nextTaskId)` immediately
      - **Guided**: Pause for user approval before starting next task
@@ -370,6 +371,16 @@ Workflow files at: `{RepoRoot}/.github/upgrades/{scenarioId}/`
 When you need to ask the user a question or confirm a choice — at pause points, during scenario initialization, before high-risk changes, or any time you present options — use the `ask_user` tool if it is available in your environment. This renders as an interactive UI element with clickable choices rather than plain text.
 
 If no such tool is available in your environment (e.g., when running on GitHub), present the question as formatted text with clear option labels and instructions (e.g., "Reply `confirm` to proceed").
+
+## Freshness Rule — Time-Sensitive Facts
+
+Your training data may be outdated for: release versions, support lifecycle dates, GA/preview status, and current recommended upgrade targets.
+
+When the user asks about ANY of these topics:
+
+1. **Check the active or matching scenario skill** — if a scenario skill is loaded (or can be matched to the user's question) and contains a `## Current Facts` section, use that data as authoritative truth. Do NOT override it with training memory.
+2. **If no scenario skill is available or it lacks a Current Facts section** — use any available tool that can retrieve current information from the internet before answering.
+3. **Never answer from training memory alone** for questions involving "latest", "current", "should I upgrade to", "is X still supported", "is X in preview", "is X GA", or technology release status.
 
 ## Communication Style
 

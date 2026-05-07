@@ -2,6 +2,14 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1102-preview1
+
+### Added
+- AppCat: new analysis rule that flags use of local configuration files during upgrade assessment
+
+### Fixed
+- MCP server: fixed a startup crash that prevented the MCP server from running
+
 ## 1.0.1087-preview1
 
 ### Added
@@ -11,9 +19,9 @@ This changelog applies to the custom agent available in this repo for Copilot CL
 ### Changed
 - Improved Aspire integration scenario to use Aspire CLI agent and skills
 - Improved the discovery of agent skills from installed plugin directories
-- Improve WebForms-To-Blazor migration by using native Blazor/HTML5 patterns and approaches
+- Improved WebForms-To-Blazor migration by using native Blazor/HTML5 patterns and approaches
 - Improved performance for assessment phase
-- Removed execution-log.md feature
+- Removed execution-log.md
 
 ## 1.0.1063-preview1
 
