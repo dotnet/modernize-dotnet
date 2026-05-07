@@ -110,13 +110,16 @@ When no active scenario exists and the user wants to start an upgrade/migration:
 2. **⛔ Load instructions FIRST**: Call `get_instructions(kind='scenario', query='<scenario_id>')` — this is MANDATORY before any upgrade work. Your training data is outdated; scenario instructions contain current best practices.
 3. **Load scenario-initialization skill**: Call `get_instructions(kind='skill', query='scenario-initialization')` — this provides the generic pre-initialization flow.
 4. **Run pre-initialization** (following the scenario-initialization skill + the scenario's Pre-Initialization section):
-   - Gather ALL parameters: source control defaults (if git repo) + scenario-specific defaults (per the scenario skill's Pre-Initialization section) + flow mode
-   - Present everything to the user in a **single consolidated prompt** — no wizard-style multi-step Q&A
-   - **Use `ask_user`** (if available) to collect the user's confirmation — follow the scenario-initialization skill's Interactive Question Tool guidance for how to structure the options
-   - Wait for user confirmation (**Automatic mode**: skip this pause if the user's initial request already provided all required parameters — see Flow Mode section)
+   - Gather ALL parameters via tool calls (source control detection + scenario-specific tools) — NO user interaction yet
+   - **If `confirm_options` is in your tool list** (MCP Apps supported): call it — do NOT present options as text. The tool handles the interactive UI.
+     - ⛔ **BLOCKING**: Do NOT write any response or proceed until `confirm_options` returns `{ confirmed, values }`. "Automatic mode" means no pauses DURING execution — it does NOT mean skipping the pre-start confirmation.
+     - If `confirmed: false` → stop, ask how to proceed. If `confirmed: true` → use the returned `values`.
+   - **If `confirm_options` is NOT in your tool list**: present the options and defaults as structured text and ask the user to confirm or override before proceeding.
    - If git repo: handle source control (commit/stash/undo pending changes, create/switch to working branch)
    - Call `initialize_scenario` — if git repo, now on the correct branch
+   - ⛔ **MANDATORY**: If `show_scenario_links` is in your tool list, call it immediately after `initialize_scenario` returns — NO exceptions: `show_scenario_links(path='<repoRoot>', title='<scenario one-liner>', eventLabel='Scenario initialized', eventStatus='initialized')` — do NOT pass `taskId` or `taskProgress` here
 5. **Follow the loaded instructions**: They guide through assessment → planning → execution
+   - During planning, after writing `upgrade-options.md`: if `show_upgrade_options` is in your tool list, call `show_upgrade_options(scenarioFolder='<scenario folder path>', assessmentSummary='<one-line summary>')` immediately — this blocks until the user confirms or cancels. Do NOT ask the user to confirm in chat when the tool is available.
 
 ### ⚠️ Never Start Work Without Instructions
 
@@ -160,8 +163,11 @@ For each task:
   6. Execute code changes
   7. Validate (build, tests)
   8. Write tasks/{taskId}/progress-details.md — what actually changed
-  9. complete_task(taskId, filesModified, executionLogSummary)
-  10. Pick next task based on flow mode:
+  9. complete_task(taskId, filesModified)
+  10. ⛔ **MANDATORY** (if `show_scenario_links` is in your tool list — NEVER skip, no exceptions):
+      - After start_task: `show_scenario_links(path='<repoRoot>', title='<task description>', eventLabel='Task started', eventStatus='started', taskId='<taskId>', taskProgress='<N> of <total>')`
+      - After complete_task: `show_scenario_links(path='<repoRoot>', title='<task description>', eventLabel='Task completed', eventStatus='completed', taskId='<taskId>', taskProgress='<N> of <total>')`
+  11. Pick next task based on flow mode:
      - **Automatic**: If `availableTasks` has a next task → `start_task(nextTaskId)` immediately
      - **Guided**: Pause for user approval before starting next task
      - If no next task or blocked → pause and report status
@@ -279,17 +285,16 @@ Context compression can happen mid-session without warning. Signs it occurred:
 
 1. **Call `get_state()`** — learn current scenario, task progress, available/blocked tasks
 2. **Read `scenario-instructions.md`** — your persistent memory (user preferences, decisions, custom instructions, **flow mode**)
-3. **Read the tail of `execution-log.md`** (last 30-50 lines) — chronological record of what happened
-4. **If a task is in-progress**, read `tasks/{taskId}/task.md` — working memory for that task
+3. **If a task is in-progress**, read `tasks/{taskId}/task.md` — working memory for that task
+4. **For recent context**, read `progress-details.md` of the last 1-2 completed tasks — these contain what actually changed, build results, and issues resolved
 
 ### Recall Intents
 
 | User intent | Source | Example phrases |
 |---|---|---|
-| Recent activity | Tail of `execution-log.md` | "what happened?", "recap", "catch me up" |
-| Task-specific history | `tasks/{taskId}/task.md` | "what happened with task X?" |
+| Recent activity | `progress-details.md` of completed tasks | "what happened?", "recap", "catch me up" |
+| Task-specific history | `tasks/{taskId}/task.md` + `progress-details.md` | "what happened with task X?" |
 | Overall status | `get_state()` + `tasks.md` | "status", "where are we?" |
-| Full history | Entire `execution-log.md` | "full recap", "complete history" |
 
 ## Workflow Integrity
 
@@ -359,7 +364,6 @@ Workflow files at: `{RepoRoot}/.github/upgrades/{scenarioId}/`
 | `tasks.md` | Task hierarchy with status (derived view) |
 | `tasks/{taskId}/task.md` | Task plan and working memory |
 | `tasks/{taskId}/progress-details.md` | Per-task change record |
-| `execution-log.md` | Chronological progress log |
 
 ## Asking User Questions
 
