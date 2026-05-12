@@ -15,6 +15,7 @@ mcp-servers:
     tools: ['*']
     env:
       APPMOD_CALLER_TYPE: copilot-coding-agent
+      MODERNIZE_DOTNET_ACTIONS_SETUP: ${MODERNIZE_DOTNET_ACTIONS_SETUP}
 ---
 
 
