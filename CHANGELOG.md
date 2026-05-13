@@ -2,6 +2,21 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1119-preview1
+
+### Added
+- Support upgrading legacy .NET Framework projects to .NET Framework 4.8.1
+- Post-upgrade reccomendations to suggest follow-up scenarios, actions, etc.
+
+### Changed
+- Improved project loading performance during whole modernization process
+
+### Fixed
+- Fixed issue to prevented MCP server to start on Mac
+- Avoid calling 'getmac' utility process since it can hang on some machines
+- Fixed Linux case-sensitivity issues and add vsblob.vsassets.io to firewall allow list
+- Fixed duplicate job name in deployment-job output variable reference
+
 ## 1.0.1102-preview1
 
 ### Added
