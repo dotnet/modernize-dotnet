@@ -75,7 +75,8 @@ Use standard tools for code changes, file operations, and build/test execution a
 `get_state()` returns one of three states:
 
 **1. Active scenario with task progress** (`hasActiveScenario: true`, `taskProgress` present):
-- Resume from current task state
+- **If `taskProgress.allTasksComplete: true`** → the scenario is finished. Enter the **post-completion phase**: load the `post-scenario-completion` workflow skill and follow it. Do NOT improvise a completion summary from memory.
+- Otherwise, resume from current task state
 - Handle any `staleTaskWarnings` before continuing (see Stale Task Warnings below)
 - Use `taskProgress.availableTasks` to pick the next task
 - Read `recentActivity` to understand what happened recently
@@ -83,9 +84,8 @@ Use standard tools for code changes, file operations, and build/test execution a
 
 **2. Existing scenarios on disk** (`hasActiveScenario: false`, `existingScenarios` present):
 - Prior sessions created scenarios that aren't loaded into this session yet
-- Determine if the user's request matches one of the existing scenarios
-- If it matches, call `resume_scenario` with that scenario ID to load it into the session
-- Then follow Context Recovery to pick up where it left off
+- **If a scenario has `taskProgress.allTasksComplete: true`** → it is completed. Enter the **post-completion phase**: load the `post-scenario-completion` workflow skill and follow it. The `get_state` response already contains all needed data in `taskProgress.postCompletion` (including `postCompletionInstructionsPath`). Do NOT ask the user what they want to do first — the skill defines format and content.
+- For incomplete scenarios: determine if the user's request matches, call `resume_scenario`, then follow Context Recovery
 - If none match the user's request, proceed with Starting New Work
 
 **3. No scenarios at all** (`hasActiveScenario: false`, no `existingScenarios`):
@@ -105,6 +105,10 @@ Handle stale warnings before starting new work: assess the task's state, check i
 ## Starting New Work
 
 When no active scenario exists and the user wants to start an upgrade/migration:
+
+**Determine if the user has a specific intent or wants exploration:**
+- **Specific intent** (e.g., "upgrade to .NET 10", "migrate EF6"): go to step 1 below.
+- **Exploratory** (e.g., "what can I modernize?", "scan my repo", "find upgrade opportunities"): load the `scenario-discovery` skill — `get_instructions(kind='skill', query='scenario-discovery')` — and follow it. Once the user picks a scenario, continue from step 2.
 
 1. **Match to a scenario**: Call `get_scenarios()` to find available scenarios
 2. **⛔ Load instructions FIRST**: Call `get_instructions(kind='scenario', query='<scenario_id>')` — this is MANDATORY before any upgrade work. Your training data is outdated; scenario instructions contain current best practices.
@@ -171,7 +175,8 @@ For each task:
   11. Pick next task based on flow mode:
      - **Automatic**: If `availableTasks` has a next task → `start_task(nextTaskId)` immediately
      - **Guided**: Pause for user approval before starting next task
-     - If no next task or blocked → pause and report status
+     - If `allTasksComplete: true` → **scenario is finished**. Load the `post-scenario-completion` workflow skill and follow it.
+     - If no next task and not all complete (blocked) → pause and report status
 ```
 
 ## Skills: Expert Guidance On-Demand
@@ -191,11 +196,13 @@ Skills encode tested workflows. Your general-purpose instincts are the fallback 
 
 ### Workflow Skills (load by stage)
 
+- `get_instructions(kind='skill', query='scenario-discovery')` — When user wants to explore modernization opportunities (scans solution, presents results)
 - `get_instructions(kind='skill', query='scenario-initialization')` — Before initializing any new scenario
 - `get_instructions(kind='skill', query='task-execution')` — Before working on tasks (assess, break down, execute, complete)
 - `get_instructions(kind='skill', query='plan-generation')` — Before creating plans
 - `get_instructions(kind='skill', query='state-management')` — For workflow state operations
 - `get_instructions(kind='skill', query='tasks-consistency')` — When `get_state` returns `tasksOutOfSync`
+- `get_instructions(kind='skill', query='post-scenario-completion')` — ⛔ **MANDATORY** when all tasks are complete (`allTasksComplete: true`). Load and follow before presenting anything to the user. Do NOT improvise completion summaries from memory.
 - `get_instructions(kind='skill', query='user-interaction')` — For communication patterns
 - `get_instructions(kind='skill', query='sub-agent-delegation')` — Before delegating any work to a sub-agent
 
@@ -324,6 +331,7 @@ recommendation you can optimize away.
 10. **Respect task dependency order** — execute tasks from `availableTasks` in order
 11. **Save preferences immediately** — any user choice → write to `scenario-instructions.md`
 12. **Fix all build warnings** — treat warnings like errors. After every task, fix all warnings in projects you modified — not just new ones you introduced. Projects should build warning-free when the task completes. Never suppress warnings (`#pragma warning disable`, `/nowarn`, `<NoWarn>`) without explicit user approval.
+13. **⛔ Post-scenario completion** — when `complete_task` returns `allTasksComplete: true`, the scenario is NOT done — you are entering the **post-completion phase**. Load the `post-scenario-completion` workflow skill and follow it. Do NOT improvise a completion summary from memory — the skill defines what to present.
 
 ## Flow Mode
 

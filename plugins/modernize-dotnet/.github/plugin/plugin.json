@@ -1,6 +1,6 @@
 {
   "name": "modernize-dotnet",
-  "version": "1.0.1102-preview1",
+  "version": "1.0.1119-preview1",
   "description": "AI-powered .NET modernization and upgrade assistant. Helps upgrade .NET Framework and .NET applications to the latest versions of .NET.",
   "author": {
     "name": "Microsoft"
@@ -13,5 +13,6 @@
   ],
   "repository": "https://github.com/dotnet/modernize-dotnet",
   "homepage": "https://dotnet.microsoft.com/en-us/platform/modernize",
-  "license": "MIT"
+  "license": "MIT",
+  "hooks": "hooks.json"
 }

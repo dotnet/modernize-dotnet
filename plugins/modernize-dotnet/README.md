@@ -36,8 +36,13 @@ modernize-dotnet/
 ├── .github/
 │   └── plugin/
 │       └── plugin.json
-└── agents/
-    └── modernize-dotnet.agent.md
+├── agents/
+│   └── modernize-dotnet.agent.md
+├── hooks/
+│   └── scripts/
+│       ├── track-telemetry.ps1
+│       └── track-telemetry.sh
+└── hooks.json
 ```
 
 ## Requirements
