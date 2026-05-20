@@ -6,7 +6,6 @@ This changelog applies to the custom agent available in this repo for Copilot CL
 
 ### Added
 - Azure SDK migration skills for upgrading Azure SDK dependencies
-- 'Open Modernize Agent' entry in Visual Studio Ctrl+Q quick launch page
 
 ### Changed
 - Improved modernize agent prompts for better upgrade guidance
