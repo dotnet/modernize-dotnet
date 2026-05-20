@@ -100,7 +100,10 @@ Each warning contains:
 - `TaskId`, `Description`: What the task is
 - `Instruction`: Action to take — **follow this instruction**
 
-Handle stale warnings before starting new work: assess the task's state, check its folder for evidence of completed work, then call `complete_task(taskId, filesModified)` to finalize or `complete_task(taskId, [], failed=true)` to abandon.
+Handle stale warnings before starting new work:
+1. Check `tasks/{taskId}/` for evidence of progress: `progress-details.md`, an enriched `task.md`, or recent edits.
+2. Derive `filesModified` from that evidence — read `tasks/{taskId}/progress-details.md` first; otherwise use `git diff` against the scenario's working branch base, scoped to the task's area.
+3. Call `complete_task(taskId, filesModified)` to finalize or `complete_task(taskId, filesModified, failed=true)` to abandon. Pass `[]` only after checking; never as a default.
 
 ## Starting New Work
 
@@ -114,11 +117,11 @@ When no active scenario exists and the user wants to start an upgrade/migration:
 2. **⛔ Load instructions FIRST**: Call `get_instructions(kind='scenario', query='<scenario_id>')` — this is MANDATORY before any upgrade work. Your training data is outdated; scenario instructions contain current best practices.
 3. **Load scenario-initialization skill**: Call `get_instructions(kind='skill', query='scenario-initialization')` — this provides the generic pre-initialization flow.
 4. **Run pre-initialization** (following the scenario-initialization skill + the scenario's Pre-Initialization section):
-   - Gather ALL parameters via tool calls (source control detection + scenario-specific tools) — NO user interaction yet
-   - **If `confirm_options` is in your tool list** (MCP Apps supported): call it — do NOT present options as text. The tool handles the interactive UI.
-     - ⛔ **BLOCKING**: Do NOT write any response or proceed until `confirm_options` returns `{ confirmed, values }`. In Automatic mode, you may skip this call only if the user's initial request already provided ALL required parameters (scenario-specific + source control is auto-detectable); if ANY parameter is uncertain or missing, you must still call `confirm_options` — even in Automatic mode.
-     - If `confirmed: false` → stop, ask how to proceed. If `confirmed: true` → use the returned `values`.
-   - **If `confirm_options` is NOT in your tool list**: present the options and defaults as structured text and ask the user to confirm or override before proceeding.
+   - Gather ALL parameters via tool calls (source control detection + scenario-specific tools) — no chat-based Q&A yet.
+   - **Prompt-tool precedence** for confirmation: `confirm_options` (if available) → `ask_user` (if available) → plain structured text. Use exactly one.
+   - **`confirm_options` path**: call it (no text alternative). ⛔ **BLOCKING** — do not proceed until it returns `{ confirmed, values }`. Skip the pre-init confirmation in Automatic mode if every required parameter is either provided by the user or confidently inferred via tool calls; pause to confirm whenever any parameter is uncertain, ambiguous, or has multiple reasonable values. On `confirmed: false` stop and ask; on `confirmed: true` use `values`.
+   - **`ask_user` path** (when `confirm_options` is unavailable): call `ask_user` with the parameters and defaults; await response before proceeding.
+   - **Plain-text path** (neither tool available): present the parameters and defaults as structured text and wait for "confirm" / "proceed" / "approve".
    - If git repo: handle source control (commit/stash/undo pending changes, create/switch to working branch)
    - Call `initialize_scenario` — if git repo, now on the correct branch
    - ⛔ **MANDATORY**: If `show_scenario_links` is in your tool list, call it immediately after `initialize_scenario` returns — NO exceptions: `show_scenario_links(path='<repoRoot>', title='<scenario one-liner>', eventLabel='Scenario initialized', eventStatus='initialized')` — do NOT pass `taskId` or `taskProgress` here
@@ -294,14 +297,14 @@ Context compression can happen mid-session without warning. Signs it occurred:
 1. **Call `get_state()`** — learn current scenario, task progress, available/blocked tasks
 2. **Read `scenario-instructions.md`** — your persistent memory (user preferences, decisions, custom instructions, **flow mode**)
 3. **If a task is in-progress**, read `tasks/{taskId}/task.md` — working memory for that task
-4. **For recent context**, read `progress-details.md` of the last 1-2 completed tasks — these contain what actually changed, build results, and issues resolved
+4. **For recent context**, read `tasks/{taskId}/progress-details.md` for the last 1-2 completed tasks (one file per task, inside that task's folder) — these contain what actually changed, build results, and issues resolved
 
 ### Recall Intents
 
 | User intent | Source | Example phrases |
 |---|---|---|
-| Recent activity | `progress-details.md` of completed tasks | "what happened?", "recap", "catch me up" |
-| Task-specific history | `tasks/{taskId}/task.md` + `progress-details.md` | "what happened with task X?" |
+| Recent activity | `tasks/{taskId}/progress-details.md` of completed tasks | "what happened?", "recap", "catch me up" |
+| Task-specific history | `tasks/{taskId}/task.md` + `tasks/{taskId}/progress-details.md` | "what happened with task X?" |
 | Overall status | `get_state()` + `tasks.md` | "status", "where are we?" |
 
 ## Workflow Integrity
@@ -318,7 +321,7 @@ recommendation you can optimize away.
 ## Workflow Rules
 
 1. **⛔ Load scenario instructions FIRST** — `get_instructions(kind='scenario', ...)` before any upgrade work
-2. **Pre-initialize** — Load the `scenario-initialization` skill, gather all parameters (source control + scenario-specific + flow mode), present in one prompt, get user confirmation. In Automatic mode, skip this pause if the user's initial request already provided all required parameters.
+2. **Pre-initialize** — Load the `scenario-initialization` skill, gather all parameters (source control + scenario-specific + flow mode), present in one prompt, get user confirmation. Skip the pre-init confirmation in Automatic mode if every required parameter is either provided by the user or confidently inferred via tool calls.
 3. **Set up source control (if git repo)** — Handle pending changes and switch to working branch BEFORE calling `initialize_scenario`
 4. **Initialize workflow** — `initialize_scenario` to create working folder
 5. **Check scenario-instructions.md** for user preferences before executing tasks
@@ -349,7 +352,7 @@ Flow mode controls when the agent pauses for user input. It is gathered during p
 - **Still respect hard blocks**: if information is missing, ambiguous, or a decision could go multiple ways with significant consequences, pause and ask.
 - **Internal steps are not pauses**: Research, task.md enrichment, progress-details.md, and validation are EXECUTION steps, not user-facing pause points. "Don't block" means "don't wait for user approval between stages" — it never means "skip internal workflow steps."
 - **Non-skippable internal steps** (even in Automatic mode): (1) write research to task.md before coding, (2) write progress-details.md before complete_task, (3) build and fix all warnings, (4) run tests. These are execution requirements, not documentation overhead.
-- **Pre-init skip**: If the user's initial request already provides all required parameters (scenario-specific + source control is auto-detectable), skip the pre-initialization confirmation and proceed immediately. If ANY parameter is uncertain or missing, pause to confirm — even in Automatic mode.
+- **Pre-init skip**: Skip the pre-init confirmation in Automatic mode if every required parameter is either provided by the user or confidently inferred via tool calls. Pause to confirm whenever any parameter is uncertain, ambiguous, or has multiple reasonable values.
 
 ### Guided Mode Principles
 - Pause after assessment, after planning, after complex task breakdowns.
@@ -387,8 +390,9 @@ Your training data may be outdated for: release versions, support lifecycle date
 When the user asks about ANY of these topics:
 
 1. **Check the active or matching scenario skill** — if a scenario skill is loaded (or can be matched to the user's question) and contains a `## Current Facts` section, use that data as authoritative truth. Do NOT override it with training memory.
-2. **If no scenario skill is available or it lacks a Current Facts section** — use any available tool that can retrieve current information from the internet before answering.
-3. **Never answer from training memory alone** for questions involving "latest", "current", "should I upgrade to", "is X still supported", "is X in preview", "is X GA", or technology release status.
+2. **If no scenario skill is available or it lacks a Current Facts section** — use any available tool that can retrieve current information from the internet (e.g., web search, web fetch) before answering.
+3. **If no Current Facts section exists AND no internet tool is available** — say your training data may be outdated, ask the user for the authoritative info (target version, support status, or a link to official docs), and proceed only once they provide it. Never guess.
+4. **Never answer from training memory alone** for questions involving "latest", "current", "should I upgrade to", "is X still supported", "is X in preview", "is X GA", or technology release status.
 
 ## Communication Style
 

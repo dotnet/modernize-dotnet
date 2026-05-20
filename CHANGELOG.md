@@ -2,6 +2,18 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1133-preview1
+
+### Added
+- Azure SDK migration skills for upgrading Azure SDK dependencies
+- 'Open Modernize Agent' entry in Visual Studio Ctrl+Q quick launch page
+
+### Changed
+- Improved modernize agent prompts for better upgrade guidance
+
+### Fixed
+- MCP Tool: fixed crash when solutionFile parameter is null or empty
+
 ## 1.0.1119-preview1
 
 ### Added
