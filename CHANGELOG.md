@@ -2,6 +2,27 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1146-preview1
+
+### Added
+- Add webforms-to-blazor-upgrade scenario
+
+### Changed
+- Drop ".NET" qualifier from Aspire branding
+- Use general sub-agents for isolated tasks to reduce main orchestrator context
+- Expand managing-package-references skill with transitive dependency conflict resolution
+
+## 1.0.1133-preview1
+
+### Added
+- Azure SDK migration skills for upgrading Azure SDK dependencies
+
+### Changed
+- Improved modernize agent prompts for better upgrade guidance
+
+### Fixed
+- MCP Tool: fixed crash when solutionFile parameter is null or empty
+
 ## 1.0.1119-preview1
 
 ### Added
