@@ -2,6 +2,15 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1152-preview1
+
+### Fixed
+- Fix NRE at EF provider
+- Fix silent no-op when project graph has cyclic references
+
+### Changed
+- Surface deferred items in post-completion next steps
+
 ## 1.0.1146-preview1
 
 ### Added
