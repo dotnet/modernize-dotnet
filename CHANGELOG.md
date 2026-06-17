@@ -2,6 +2,15 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1157-preview1
+
+### Fixed
+- Performance fix for analysis report generation
+
+### Changed
+- Improved telemetry accuracy for VS Code sessions
+- Improved reliability of background file change monitoring
+
 ## 1.0.1152-preview1
 
 ### Fixed
