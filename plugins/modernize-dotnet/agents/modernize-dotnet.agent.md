@@ -6,7 +6,7 @@ mcp-servers:
     type: 'local'
     command: 'dnx'
     args: [
-      'Microsoft.GitHubCopilot.Modernization.Mcp@1.0.1152-preview1',
+      'Microsoft.GitHubCopilot.Modernization.Mcp@1.0.1157-preview1',
       '--yes',
       '--ignore-failed-sources'
     ]
