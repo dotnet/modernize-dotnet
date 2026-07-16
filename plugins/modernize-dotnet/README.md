@@ -1,8 +1,19 @@
 # .NET Modernization Plugin
 
+> [!WARNING]
+> **`modernize-dotnet` is deprecated — it has moved to [`upgrade-agent`](https://github.com/microsoft/upgrade-agent-plugins).**
+> This plugin still works today, but new features and fixes now ship only to `upgrade-agent` (agent `@upgrade`). Please migrate:
+>
+> ```
+> /plugin marketplace add microsoft/upgrade-agent-plugins
+> /plugin install upgrade-agent@upgrade-agent-plugins
+> ```
+
 AI-powered assistance for upgrading and modernizing .NET applications. This plugin adds the **modernize-dotnet** agent to your Copilot CLI.
 
-## Installation
+## Legacy installation
+
+> This installs the **deprecated** `modernize-dotnet` plugin, which still works today. For new setups, use [`upgrade-agent`](https://github.com/microsoft/upgrade-agent-plugins) instead — see the deprecation notice above.
 
 Add the marketplace, then install the plugin:
 
