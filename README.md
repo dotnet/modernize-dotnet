@@ -1,5 +1,14 @@
 # .NET Modernization Agent
 
+> [!WARNING]
+> **`modernize-dotnet` is deprecated — it has moved to [`upgrade-agent`](https://github.com/microsoft/upgrade-agent-plugins).**
+> This plugin still works today, but new features and fixes now ship only to `upgrade-agent` (agent `@upgrade`). Please migrate:
+>
+> ```
+> /plugin marketplace add microsoft/upgrade-agent-plugins
+> /plugin install upgrade-agent@upgrade-agent-plugins
+> ```
+
 AI-powered agent for upgrading and modernizing .NET applications across multiple development environments.
 
 Use the modernize-dotnet agent to analyze your application, generate an upgrade plan, and apply changes to move to the latest .NET.

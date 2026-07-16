@@ -2,6 +2,12 @@
 
 This changelog applies to the custom agent available in this repo for Copilot CLI and Copilot Coding Agent as well as in the Visual Studio Code extension
 
+## 1.0.1161-preview1
+
+### Deprecated
+- Added deprecation notices guiding users to migrate from `modernize-dotnet` to `upgrade-agent` (agent `@upgrade`). The plugin and agent still work, but new features and fixes now ship only to `upgrade-agent`.
+- The VS Code extension now shows a deprecation notice pointing users to the GitHub Copilot upgrade experience.
+
 ## 1.0.1157-preview1
 
 ### Fixed
