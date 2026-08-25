@@ -79,9 +79,9 @@ The modernize-dotnet plugin adds a modernization agent to Copilot CLI.
 </details>
 
 <details>
-<summary>GitHub Copilot Coding Agent</summary>
+<summary>Copilot Coding Agent</summary>
 
-A custom agent definition and setup steps are provided for use with [Copilot Coding Agent](https://docs.github.com/en/copilot/using-github-copilot/using-copilot-coding-agent) in GitHub. This allows Copilot to modernize .NET projects directly via pull requests.
+A custom agent definition and setup steps are provided for use with [Copilot Coding Agent](https://awesome-copilot.github.com/learning-hub/using-copilot-coding-agent/) in GitHub. This allows Copilot to modernize .NET projects directly via pull requests.
 
 See the [coding-agent README](coding-agent/README.md) for setup instructions.
 
